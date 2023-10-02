@@ -4,8 +4,8 @@ public class Product {
     private String model;
     private double price;
 
-    public Product(String productId, String brand, String model, double price) {
-        this.productId = productId;
+    public Product(String brand, String model, double price) {
+        //this.productId = productId;
         this.brand = brand;
         this.model = model;
         this.price = price;

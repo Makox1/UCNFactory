@@ -2,12 +2,14 @@ import java.util.Date;
 import java.util.List;
 
 public class Sale {
-    private Client client;
-    private List<Product> products;
     private int transactionID;
     private Date transactionDate;
+    private Client client;
+    private Product products;
 
-    public Sale(Client client, List<Product> products, int transactionID, Date transactionDate) {
+
+
+    public Sale(Client client, Product products, int transactionID, Date transactionDate) {
         this.client = client;
         this.products = products;
         this.transactionID = transactionID;
@@ -22,11 +24,11 @@ public class Sale {
         this.client = client;
     }
 
-    public List<Product> getProducts() {
+    public Product getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Product products) {
         this.products = products;
     }
 

@@ -1,10 +1,12 @@
 public class Mouse extends Product{
     private boolean isWired;
 
-    public Mouse(String productId, String brand, String model, double price, boolean isWired) {
-        super(productId, brand, model, price);
+    public Mouse(String brand, String model, double price, boolean isWired) {
+        super(brand, model, price);
+        //super(productId, brand, model, price);
         this.isWired = isWired;
     }
+
 
     public boolean isWired() {
         return isWired;

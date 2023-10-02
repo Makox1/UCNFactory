@@ -1,5 +1,4 @@
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -8,15 +7,15 @@ public class SQLiteDBSingleton {
     private static SQLiteDBSingleton instance;
     private Connection connection;
 
-    private static final String DATABASE_URL = "jdbc:sqlite:\pathHere";
-    private static final Logger logger = LoggerFactory.getLogger(SQLiteDBSingleton.class);
+    private static final String DATABASE_URL = "jdbc:sqlite:database.db";
+
 
     private SQLiteDBSingleton() {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(DATABASE_URL);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Error initializing database connection: " + e.getMessage(), e);
+            System.out.println("Error initializing database connection: " + e.getMessage());
             // You can throw a custom exception here if needed.
         }
     }
@@ -37,7 +36,7 @@ public class SQLiteDBSingleton {
             try {
                 connection.close();
             } catch (SQLException e) {
-                logger.error("Error closing database connection: " + e.getMessage(), e);
+                System.out.println("Error closing database connection: " + e.getMessage());
                 // You can throw a custom exception here if needed.
             }
         }
