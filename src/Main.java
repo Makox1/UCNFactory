@@ -10,8 +10,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 public class Main {
+    private static final String sessionId = UUID.randomUUID().toString();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("hhmmss"); // Change the pattern
+    private static BufferedWriter logWriter;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         PurchaseReportImplement impl = new PurchaseReportImplement();
@@ -22,19 +29,23 @@ public class Main {
         SQLiteDBSingleton dbSingleton = SQLiteDBSingleton.getInstance();
         connection = dbSingleton.getConnection();
         System.out.println("Conexión a la base de datos SQLite establecida.");
-
+        openLogFile();
 
         while (true) {
-            System.out.println("\nMain Menu");
-            System.out.println("1. Register a Product");
-            System.out.println("2. Register a Client");
-            System.out.println("3. Register a Purchase");
-            System.out.println("4. Customer with the Most Purchases");
-            System.out.println("5. Best Selling Product");
-            System.out.println("6. Least Sold Product");
-            System.out.println("7. Customer Who Spent the Most");
-            System.out.println("8. Exit");
-            System.out.print("Enter your choice: ");
+            String menu=
+                    "\nMain Menu\n" +
+                    "1. Register a Product\n" +
+                    "2. Register a Client\n" +
+                    "3. Register a Purchase\n" +
+                    "4. Customer with the Most Purchases\n" +
+                    "5. Best Selling Product\n" +
+                    "6. Least Sold Product\n" +
+                    "7. Customer Who Spent the Most\n" +
+                    "8. Exit\n" +
+                    "Enter your choice: ";
+            System.out.print(menu);
+            logToFile(menu);
+
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
@@ -150,25 +161,34 @@ public class Main {
                     break;
                 case 4:
                     System.out.println("You Chose 4");
-                    impl.clientWithMostPurchases(connection);
+                    String val4 =impl.clientWithMostPurchases(connection);
+                    System.out.println(val4);
+                    logToFile(val4);
                     break;
                 case 5:
                     System.out.println("You Chose 5");
-                    impl.bestSellingProduct(connection);
+                    String val5= impl.bestSellingProduct(connection);
+                    System.out.println(val5);
+                    logToFile(val5);
                     break;
                 case 6:
                     System.out.println("You Chose 6");
-                    impl.worseSellingProduct(connection);
+                    String val6= impl.worseSellingProduct(connection);
+                    System.out.println(val6);
+                    logToFile(val6);
                     break;
                 case 7:
                     System.out.println("You Chose 7");
-                    impl.clientWithHighestTotalSpending(connection);
+                    String val7= impl.clientWithHighestTotalSpending(connection);
+                    System.out.println(val7);
+                    logToFile(val7);
                     break;
                 case 8:
 
                     try {
                         System.out.println("Conexión cerrada.");
                         connection.close();
+                        logToFile("Existing the system.");
                         System.exit(0);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
@@ -184,19 +204,45 @@ public class Main {
         }
     }
 
-    private static void logToFile(String message) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmss");
+
+
+
+
+    private static void openLogFile() {
         String currentTime = dateFormat.format(new Date());
+        String logFileName = "transaction" + currentTime + ".log";
 
-        String logFileName = "transaction_" + currentTime + ".log";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName, true))) {
-            String logMessage = "[" + currentTime + "] " + message;
-            writer.write(logMessage);
-            writer.newLine();
+        try {
+            logWriter = new BufferedWriter(new FileWriter(logFileName, true));
         } catch (IOException e) {
-            System.err.println("Error writing to log file: " + e.getMessage());
+            System.err.println("Error opening log file: " + e.getMessage());
         }
     }
+
+    private static void logToFile(String message) {
+        if (logWriter != null) {
+            String currentTime = dateFormat.format(new Date());
+            String logMessage = "[" + currentTime + "] " + message;
+
+            try {
+                logWriter.write(logMessage);
+                logWriter.newLine();
+                logWriter.flush(); // Ensure that the message is written immediately
+            } catch (IOException e) {
+                System.err.println("Error writing to log file: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void closeLogFile() {
+        try {
+            if (logWriter != null) {
+                logWriter.close();
+            }
+        } catch (IOException e) {
+            System.err.println("Error closing log file: " + e.getMessage());
+        }
+    }
+
 }
 

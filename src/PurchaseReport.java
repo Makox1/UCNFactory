@@ -13,11 +13,11 @@ interface PurchaseReport {
     //List<Client> clients
 
     // Method to get the best-selling product
-    Product bestSellingProduct(Connection connection);
+    String bestSellingProduct(Connection connection);
 
     // Method to get the worse-selling product
-    Product worseSellingProduct(Connection connection);
+    String worseSellingProduct(Connection connection);
 
     // Method to get the client who has spent the most money on purchases
-    Client clientWithHighestTotalSpending(Connection connection);
+    String clientWithHighestTotalSpending(Connection connection);
 }
