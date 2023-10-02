@@ -15,9 +15,9 @@ interface PurchaseReport {
     // Method to get the best-selling product
     Product bestSellingProduct(Connection connection);
 
-    // Method to get the least-selling product
-    Product leastSellingProduct(List<Product> products);
+    // Method to get the worse-selling product
+    Product worseSellingProduct(Connection connection);
 
     // Method to get the client who has spent the most money on purchases
-    Client clientWithHighestTotalSpending(List<Client> clients);
+    Client clientWithHighestTotalSpending(Connection connection);
 }

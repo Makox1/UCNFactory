@@ -180,7 +180,6 @@ public class PurchaseReportImplement implements PurchaseReport {
 
             ResultSet rs = preparedStatement.executeQuery(query);
 
-            System.out.println(rs.getInt(1));
         }catch (SQLException e){
             System.err.println("The Client does not exist in the database. " + e.getMessage());
         }
@@ -264,19 +263,68 @@ public class PurchaseReportImplement implements PurchaseReport {
     @Override
     // Method to get the best-selling product
     public Product bestSellingProduct(Connection connection){
+        try {
+            String sql = "SELECT p.brand, p.model, COUNT(s.productId) AS total_sales FROM Sale s JOIN Product p ON s.productId = p.id GROUP BY p.brand, p.model ORDER BY total_sales DESC LIMIT 1;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String brand = resultSet.getString("brand");
+                String model = resultSet.getString("model");
+                String total_sales = resultSet.getString("total_sales");
+                System.out.println("The best selling product is: ");
+                System.out.println("Brand: "+brand);
+                System.out.println("Model: "+model);
+                System.out.println("Total Sales: "+total_sales);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
 
-    @Override
-    // Method to get the least-selling product
-    public Product leastSellingProduct(List<Product> products){
-        return null;
+        @Override
+    // Method to get the worse-selling product
+    public Product worseSellingProduct(Connection connection){
+            try {
+                String sql = "SELECT p.brand, p.model, COUNT(s.productId) AS total_sales FROM Sale s JOIN Product p ON s.productId = p.id GROUP BY p.brand, p.model ORDER BY total_sales DESC LIMIT 1;";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    String brand = resultSet.getString("brand");
+                    String model = resultSet.getString("model");
+                    String total_sales = resultSet.getString("total_sales");
+                    System.out.println("The worse selling product is: ");
+                    System.out.println("Brand: "+brand);
+                    System.out.println("Model: "+model);
+                    System.out.println("Total Sales: "+total_sales);
+                }
+            }catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
     }
 
     @Override
     // Method to get the client who has spent the most money on purchases
-    public Client clientWithHighestTotalSpending(List<Client> clients){
+    public Client clientWithHighestTotalSpending(Connection connection){
+        try {
+            String sql = "SELECT s.clientRut, SUM(p.price) AS total_amount FROM Sale s JOIN Product p ON s.productId = p.id GROUP BY s.clientRut ORDER BY total_amount DESC LIMIT 1";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String rut = resultSet.getString("clientRut");
+                String total_amount = resultSet.getString("total_amount");
+                System.out.println("Customer Who Spent the Most: ");
+                System.out.println("Rut: "+rut);
+                System.out.println("Total Amount: "+total_amount);
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 }

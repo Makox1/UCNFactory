@@ -153,7 +153,17 @@ public class Main {
                     impl.clientWithMostPurchases(connection);
                     break;
                 case 5:
-
+                    System.out.println("You Chose 5");
+                    impl.bestSellingProduct(connection);
+                    break;
+                case 6:
+                    System.out.println("You Chose 6");
+                    impl.worseSellingProduct(connection);
+                    break;
+                case 7:
+                    System.out.println("You Chose 7");
+                    impl.clientWithHighestTotalSpending(connection);
+                    break;
                 case 8:
 
                     try {
